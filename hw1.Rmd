@@ -124,6 +124,7 @@ a2 <- flights[flights$carrier == "AA",]
 tail_uni <- a2$tailnum
 uniq <- unique(tail_uni, incomparables =F)
 num_uni <- table(uniq)
+num_uni
 num_planes_aa <- sum(num_uni)
 num_planes_aa
 ```
@@ -154,6 +155,7 @@ number_air <- table(airline_jfk)
 number_air
 which.max(number_air)
 rrrnn <-row.names(number_air)
+rrrnn
 most_flights_jfk <- rrrnn[3]
 most_flights_jfk
 
