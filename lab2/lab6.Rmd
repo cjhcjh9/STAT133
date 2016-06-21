@@ -13,13 +13,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Write a function `MyVar` that calculates the population variance of a vector.  If you need a refresher of what that means, [this section of wikipedia should help](https://en.wikipedia.org/wiki/Variance#Population_variance_and_sample_variance).
 ```{r}
-MyVar <- function(n) {
+MyVar <- function(x) {
 
-        x = rnorm(n)
-        sum((x-mean(x))^2)/(n)
+        n <- length(x)
+        mu <- mean(x)
+        ssum <- sum((x-mu^2))
+        return(ssum/n)
 }
 
-MyVar(4)
+MyVar(c(1,3,4,5,6,7,8,9))
 ```
 
 
@@ -30,14 +32,19 @@ Test your function:
 ```{r, eval = F}
 zeroes <- function(a,b,c) {
       roots <- (b^2-4*a*c)
-      if (roots >= 0){
-              return(c(-b+(roots^(1/2)))/2*a, (-b-(roots^(1/2))/2*a))
+      
+      if (roots < 0){
+              stop("This polynomial has no real roots")
+             
+      } else if (roots == 0) {
+              return(-b/(2*a))
       } else {
-              return("This polynomial has no real roots")
+              realroots <- c((-b+sqrt(roots))/(2*a),(-b-sqrt(roots))/(2*a))
+              return(realroots)
       }
 }
 zeroes(1, 0, 0)
-zeroes(1, 0, 1)
+zeroes(1, 0, -1)
 zeroes(1, 1, 1)
 ```
 
@@ -84,27 +91,28 @@ pmax returns the parallel maxium of the vectors. on the other hand, max gives on
 2. When you "roll dice with advantage", you roll a pair of dice and take the higher value as your roll.  Write a function `AdvRoll` the simulates rolling with advantage `n` times. The function should take on 2 arguments `sides` and `n` and output a length `n` vector of rolls.
 ```{r}
 AdvRoll <- function(sides,n) {
-        sides <- sample(sides,n)
-        answer <- pmax(sides,n)
-        return(answer)
+        first_roll <- sample(sides,n, replace = TRUE)
+        second_roll <- sample(sides,n,replace = TRUE)
+        pmax(first_roll,second_roll)
 }
-AdvRoll(12,6)
+AdvRoll(12,10)
+
 ```
 
 3. Write your own summary function called `MySummary` that, given a numeric vector `x`, returns the following summary statistics: mean, median, mode, sum, and sum of squares.
 ```{r}
-moddee <- function(x) {
-       which.max(table(x))
+Mysummary <- function(x) {
+        list(mean = mean(x),
+             median = median(x),
+             mode = as.numeric(names(sort(table(x), T))[1]),
+       sum = sum(x),
+       sum_of_squares = (sum(x)^2))
 }
-MySummary <- function(x) {
-        
-        return(c(mean(x),median(x),moddee(x),sum(x),sum(x)^2))
-}
-MySummary(c(1,1,2,3,4))
+Mysummary(c(1,1,2,3,4))
 ```
 
 4. Using your two functions, simulate "rolling dice with advantage" 1000 times and find the summary statistics.
 ```{r}
-MySummary(1000*AdvRoll(12,4))
+Mysummary(AdvRoll(6,1000))
 ```
 
